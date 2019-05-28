@@ -1,3 +1,10 @@
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -15,7 +22,6 @@ public class InterfaceRecherchePays extends JFrame {
     private JTextField superficieMax = new JTextField(5);
 
     public InterfaceRecherchePays(File xmlFile) {
-
         createXSL.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -31,9 +37,21 @@ public class InterfaceRecherchePays extends JFrame {
 
         });
 
-        /**
-         * A compléter : Remplissage des listes de recherche (avec les continents et les langues parlées dans l'ordre alphabétique)
-         */
+        // parse and load file into memory;
+        SAXBuilder builder = new SAXBuilder();
+        try {
+            Document document = builder.build(xmlFile);
+            XPathFactory xpath = XPathFactory.instance();
+            XPathExpression<Element> exprRegions = xpath.compile("//element/region[not(. = following::region/.)]", Filters.element());
+            for (Element element : exprRegions.evaluate(document)) {
+                continents.addItem(element.getValue());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // create xpath factory
+        XPathFactory xpath = XPathFactory.instance();
 
         setLayout(new BorderLayout());
 
@@ -57,14 +75,9 @@ public class InterfaceRecherchePays extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setTitle("Interface de recherche de pays");
-
-
     }
 
     public static void main(String ... args) {
-
-        new InterfaceRecherchePays(new File("countries.xml"));
-
+        new InterfaceRecherchePays(new File("data/countries.xml"));
     }
-
 }
