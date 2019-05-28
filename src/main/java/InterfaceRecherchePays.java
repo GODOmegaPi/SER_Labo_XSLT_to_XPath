@@ -26,15 +26,10 @@ public class InterfaceRecherchePays extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 super.mouseClicked(e);
 
-                // Création des fichiers XSL selon ce qui est demandé
-
-                /** A compléter... **/
-
+                XSLGenerator xslg = new XSLGenerator();
             }
-
         });
 
         // parse and load file into memory;
@@ -43,8 +38,17 @@ public class InterfaceRecherchePays extends JFrame {
             Document document = builder.build(xmlFile);
             XPathFactory xpath = XPathFactory.instance();
             XPathExpression<Element> exprRegions = xpath.compile("//element/region[not(. = following::region/.)]", Filters.element());
+
+            continents.addItem("Tous");
             for (Element element : exprRegions.evaluate(document)) {
                 continents.addItem(element.getValue());
+            }
+
+            XPathExpression<Element> exprLang = xpath.compile("//element/languages/element/name[not(. = following::name/.)]", Filters.element());
+
+            langages.addItem("Tous");
+            for (Element element : exprLang.evaluate(document)) {
+                langages.addItem(element.getValue());
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -61,7 +65,7 @@ public class InterfaceRecherchePays extends JFrame {
         panelRecherche.add(new JLabel("Choix d'une langue"));
         panelRecherche.add(langages);
 
-        panelRecherche.add(new JLabel("Superficie minimume"));
+        panelRecherche.add(new JLabel("Superficie minimum"));
         panelRecherche.add(superficieMin);
 
         panelRecherche.add(new JLabel("Superficie maximum"));
