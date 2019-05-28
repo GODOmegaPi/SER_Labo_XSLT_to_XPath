@@ -78,6 +78,6 @@ public class InterfaceRecherchePays extends JFrame {
     }
 
     public static void main(String ... args) {
-        new InterfaceRecherchePays(new File("data/countries.xml"));
+        new InterfaceRecherchePays(new File("src/main/resources/data/countries.xml"));
     }
 }
