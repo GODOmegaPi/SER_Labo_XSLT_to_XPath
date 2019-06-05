@@ -29,6 +29,7 @@ public class InterfaceRecherchePays extends JFrame {
                 super.mouseClicked(e);
 
                 XSLGenerator xslg = new XSLGenerator();
+                xslg.generate();
             }
         });
 
@@ -46,7 +47,7 @@ public class InterfaceRecherchePays extends JFrame {
 
             XPathExpression<Element> exprLang = xpath.compile("//element/languages/element/name[not(. = following::name/.)]", Filters.element());
 
-            langages.addItem("Tous");
+            langages.addItem("Toutes");
             for (Element element : exprLang.evaluate(document)) {
                 langages.addItem(element.getValue());
             }
