@@ -28,7 +28,6 @@ public class XSLGenerator {
 
             Element racine = document.createElement("xsl:stylesheet");
             racine.setAttribute("version", "1.0");
-            racine.setAttribute("href", "countries.xml");
             racine.setAttribute("xmlns:xsl", "http://www.w3.org/1999/XSL/Transform");
 
             Element template = document.createElement("xsl:template");
