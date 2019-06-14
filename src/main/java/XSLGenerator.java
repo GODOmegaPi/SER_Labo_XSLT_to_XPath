@@ -21,7 +21,6 @@ public class XSLGenerator {
     }
 
     public void generate(){
-        final String filter = generateFilter();
         try{
             Document document = DocumentBuilderFactory
                     .newInstance()
@@ -54,7 +53,7 @@ public class XSLGenerator {
 
             Element body = document.createElement("body");
             Element countries = document.createElement("xsl:for-each");
-            countries.setAttribute("select", "//countries/element");
+            countries.setAttribute("select", "//countries/element" + generateFilter());
 
             Element countryName = document.createElement("p");
             countryName.setAttribute("data-toggle", "modal");
@@ -115,10 +114,10 @@ public class XSLGenerator {
         String filter = "[";
 
         if(this.continent != null){
-            filter += "region = " + this.continent + " and ";
+            filter += "region = '" + this.continent + "' and ";
         }
         if(this.language != null){
-            //filter += "region = " + this.language + " and ";
+            filter += "(languages/element/name = '" + this.language + "') and ";
         }
         if(this.minSize != Integer.MIN_VALUE){
             filter += "area > " + this.minSize + " and ";

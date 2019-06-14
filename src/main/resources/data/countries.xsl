@@ -8,7 +8,7 @@
         <link href="css/bootstrap.min.css" rel="stylesheet"/>
       </head>
       <body>
-        <xsl:for-each select="//countries/element">
+        <xsl:for-each select="//countries/element[region = 'Europe' and (languages/element/name = 'English') and area &gt; 10 and area &lt; 42900]">
           <p data-toggle="modal">
             <xsl:attribute name="data-target">
               <xsl:value-of select="concat('#', alpha3Code)"/>

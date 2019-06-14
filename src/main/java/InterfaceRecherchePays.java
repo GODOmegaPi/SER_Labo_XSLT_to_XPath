@@ -29,6 +29,20 @@ public class InterfaceRecherchePays extends JFrame {
                 super.mouseClicked(e);
 
                 XSLGenerator xslg = new XSLGenerator();
+
+                if(!continents.getSelectedItem().toString().equals("Tous")){
+                    xslg.setContinent(continents.getSelectedItem().toString());
+                }
+                if(!langages.getSelectedItem().toString().equals("Toutes")){
+                    xslg.setLanguage(langages.getSelectedItem().toString());
+                }
+                if(!superficieMin.getText().isEmpty()){
+                    xslg.setMinSize(Integer.parseInt(superficieMin.getText()));
+                }
+                if(!superficieMax.getText().isEmpty()){
+                    xslg.setMaxSize(Integer.parseInt(superficieMax.getText()));
+                }
+
                 xslg.generate();
             }
         });
@@ -41,6 +55,7 @@ public class InterfaceRecherchePays extends JFrame {
             XPathExpression<Element> exprRegions = xpath.compile("//element/region[not(. = following::region/.)]", Filters.element());
 
             continents.addItem("Tous");
+            continents.setSelectedItem(continents.getItemAt(0));
             for (Element element : exprRegions.evaluate(document)) {
                 continents.addItem(element.getValue());
             }
@@ -48,6 +63,7 @@ public class InterfaceRecherchePays extends JFrame {
             XPathExpression<Element> exprLang = xpath.compile("//element/languages/element/name[not(. = following::name/.)]", Filters.element());
 
             langages.addItem("Toutes");
+            langages.setSelectedItem(langages.getItemAt(0));
             for (Element element : exprLang.evaluate(document)) {
                 langages.addItem(element.getValue());
             }
