@@ -21,6 +21,7 @@ public class XSLGenerator {
     }
 
     public void generate(){
+        final String filter = generateFilter();
         try{
             Document document = DocumentBuilderFactory
                     .newInstance()
@@ -60,14 +61,14 @@ public class XSLGenerator {
             Element countryModal = document.createElement("xsl:attribute");
             countryModal.setAttribute("name", "data-target");
             Element countryModalPath = document.createElement("xsl:value-of");
-            countryModalPath.setAttribute("select", "concat('#', name)");
+            countryModalPath.setAttribute("select", "concat('#', alpha3Code)");
             countryModal.appendChild(countryModalPath);
             countryName.appendChild(countryModal);
 
             Element modal = generateModal(document);
 
             Element countryNameSelect = document.createElement("xsl:value-of");
-            countryNameSelect.setAttribute("select", "name");
+            countryNameSelect.setAttribute("select", "translations/fr");
 
             Element countryFlag = document.createElement("img");
             countryFlag.setAttribute("width", "25");
@@ -110,6 +111,29 @@ public class XSLGenerator {
         }
     }
 
+    private String generateFilter() {
+        String filter = "[";
+
+        if(this.continent != null){
+            filter += "region = " + this.continent + " and ";
+        }
+        if(this.language != null){
+            //filter += "region = " + this.language + " and ";
+        }
+        if(this.minSize != Integer.MIN_VALUE){
+            filter += "area > " + this.minSize + " and ";
+        }
+        if(this.maxSize != Integer.MAX_VALUE){
+            filter += "area < " + this.maxSize + " and ";
+        }
+
+        if(filter.length() > 1) {
+            return filter.substring(0, filter.length() - 5) + "]";
+        }
+
+        return "";
+    }
+
     private Element generateModal(Document document) {
         Element modal = document.createElement("div");
         modal.setAttribute("class", "modal fade");
@@ -120,7 +144,7 @@ public class XSLGenerator {
         modalId.setAttribute("name", "id");
 
         Element modalIdPath = document.createElement("xsl:value-of");
-        modalIdPath.setAttribute("select", "name");
+        modalIdPath.setAttribute("select", "alpha3Code");
 
         Element modalDialog = document.createElement("div");
         modalDialog.setAttribute("class", "modal-dialog");
@@ -135,11 +159,20 @@ public class XSLGenerator {
         Element modalTitle = document.createElement("h5");
         modalTitle.setAttribute("class", "modal-title");
         Element modalTitleValue = document.createElement("xsl:value-of");
-        modalTitleValue.setAttribute("select", "name");
+        modalTitleValue.setAttribute("select", "translations/fr");
         modalTitle.appendChild(modalTitleValue);
 
         Element modalBody = document.createElement("div");
         modalBody.setAttribute("class", "modal-body");
+
+        Element modalBodyContainer = document.createElement("div");
+        modalBodyContainer.setAttribute("class", "container-fluid");
+
+        Element modalBodyRow = document.createElement("div");
+        modalBodyRow.setAttribute("class", "row");
+
+        Element modalBodyColImg = document.createElement("div");
+        modalBodyColImg.setAttribute("class", "col-md-6");
 
         Element countryFlag = document.createElement("img");
         countryFlag.setAttribute("width", "150");
@@ -151,6 +184,10 @@ public class XSLGenerator {
         countryFlagSrcPath.setAttribute("select", "flag");
         countryFlagSrc.appendChild(countryFlagSrcPath);
         countryFlag.appendChild(countryFlagSrc);
+        modalBodyColImg.appendChild(countryFlag);
+
+        Element modalBodyColInfos = document.createElement("div");
+        modalBodyColInfos.setAttribute("class", "col-md-6");
 
         Element countryPopulation = document.createElement("p");
         Element countryPopulationPath = document.createElement("xsl:value-of");
@@ -177,6 +214,18 @@ public class XSLGenerator {
         countryCityPath.setAttribute("select", "concat('Capitale: ', capital)");
         countryCity.appendChild(countryCityPath);
 
+        Element languagesTitle = document.createElement("h2");
+        languagesTitle.setTextContent("Langues parlées");
+
+        Element languagesPath = document.createElement("xsl:for-each");
+        languagesPath.setAttribute("select", "languages/element");
+
+        Element langs = document.createElement("p");
+        Element langsNameSelect = document.createElement("xsl:value-of");
+        langsNameSelect.setAttribute("select", "name");
+        langs.appendChild(langsNameSelect);
+        languagesPath.appendChild(langs);
+
         Element modalFooter = document.createElement("div");
         modalFooter.setAttribute("class", "modal-footer");
 
@@ -188,12 +237,20 @@ public class XSLGenerator {
 
         modalHeader.appendChild(modalTitle);
 
-        modalBody.appendChild(countryFlag);
-        modalBody.appendChild(countryCity);
-        modalBody.appendChild(countryPopulation);
-        modalBody.appendChild(countrySize);
-        modalBody.appendChild(countryContinent);
-        modalBody.appendChild(countrySubContinent);
+        modalBodyColInfos.appendChild(countryCity);
+        modalBodyColInfos.appendChild(countryPopulation);
+        modalBodyColInfos.appendChild(countrySize);
+        modalBodyColInfos.appendChild(countryContinent);
+        modalBodyColInfos.appendChild(countrySubContinent);
+
+        modalBodyRow.appendChild(modalBodyColImg);
+        modalBodyRow.appendChild(modalBodyColInfos);
+
+        modalBodyContainer.appendChild(modalBodyRow);
+
+        modalBody.appendChild(modalBodyContainer);
+        modalBody.appendChild(languagesTitle);
+        modalBody.appendChild(languagesPath);
 
         modalFooter.appendChild(modalButtonClose);
 

@@ -11,9 +11,9 @@
         <xsl:for-each select="//countries/element">
           <p data-toggle="modal">
             <xsl:attribute name="data-target">
-              <xsl:value-of select="concat('#', name)"/>
+              <xsl:value-of select="concat('#', alpha3Code)"/>
             </xsl:attribute>
-            <xsl:value-of select="name"/>
+            <xsl:value-of select="translations/fr"/>
             <img height="20" width="25">
               <xsl:attribute name="src">
                 <xsl:value-of select="flag"/>
@@ -22,36 +22,50 @@
           </p>
           <div class="modal fade" role="dialog" tab-index="-1">
             <xsl:attribute name="id">
-              <xsl:value-of select="name"/>
+              <xsl:value-of select="alpha3Code"/>
             </xsl:attribute>
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">
-                    <xsl:value-of select="name"/>
+                    <xsl:value-of select="translations/fr"/>
                   </h5>
                 </div>
                 <div class="modal-body">
-                  <img height="125" width="150">
-                    <xsl:attribute name="src">
-                      <xsl:value-of select="flag"/>
-                    </xsl:attribute>
-                  </img>
-                  <p>
-                    <xsl:value-of select="concat('Capitale: ', capital)"/>
-                  </p>
-                  <p>
-                    <xsl:value-of select="concat(concat('Population: ', population), ' habitants')"/>
-                  </p>
-                  <p>
-                    <xsl:value-of select="concat(concat('Superficie: ', area), ' km^2')"/>
-                  </p>
-                  <p>
-                    <xsl:value-of select="concat('Continent: ', region)"/>
-                  </p>
-                  <p>
-                    <xsl:value-of select="concat('Sous-Continent: ', subregion)"/>
-                  </p>
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <img height="125" width="150">
+                          <xsl:attribute name="src">
+                            <xsl:value-of select="flag"/>
+                          </xsl:attribute>
+                        </img>
+                      </div>
+                      <div class="col-md-6">
+                        <p>
+                          <xsl:value-of select="concat('Capitale: ', capital)"/>
+                        </p>
+                        <p>
+                          <xsl:value-of select="concat(concat('Population: ', population), ' habitants')"/>
+                        </p>
+                        <p>
+                          <xsl:value-of select="concat(concat('Superficie: ', area), ' km^2')"/>
+                        </p>
+                        <p>
+                          <xsl:value-of select="concat('Continent: ', region)"/>
+                        </p>
+                        <p>
+                          <xsl:value-of select="concat('Sous-Continent: ', subregion)"/>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <h2>Langues parlées</h2>
+                  <xsl:for-each select="languages/element">
+                    <p>
+                      <xsl:value-of select="name"/>
+                    </p>
+                  </xsl:for-each>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-primary" data-dismiss="modal" type="button">Fermer</button>
